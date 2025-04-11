@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Guess The Secret Code</title>
+    <link
+      rel="icon"
+      href="https://pngimg.com/d/question_mark_PNG134.png"
+      type="image/png"
+    />
+    <style>
+      body {
+        background-image: url("https://i.ytimg.com/vi/DvAJ_J2svv8/maxresdefault.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // Validate the player's guess
+      function validateGuess(guess) {
+        return /^\d{3}$/.test(guess);
+      }
+    </script>
+    <script>
+      const maxGuesses = 10;
+      const numLegnth = 3;
+
+      // Generate array of random digits
+      let numberArray = [];
+      for (i = 0; i < numLegnth; i++) {
+        numberArray[i] = Math.floor(Math.random() * 10);
+      }
+
+      let won = false;
+      let inputError = false;
+
+      for (guessesLeft = maxGuesses; guessesLeft > 0; guessesLeft--) {
+        let correctPoisitions = 0;
+        let correctDigits = 0;
+
+        var guess = prompt(
+          "Guess a " +
+            numLegnth +
+            " digit number. You have " +
+            guessesLeft +
+            " guesses left."
+        );
+        // alert("You guessed: " + guess);
+        // Validate input
+        if (guess == null || guess.trim().length == 0) {
+          inputError = true;
+          break;
+        }
+
+        if (!this.validateGuess(guess)) {
+          inputError = true;
+          break;
+        }
+
+        // check for correct digits in the correct position and keep count
+        let inputCopy = numberArray.slice();
+        for (i = 0; i < numLegnth; i++) {
+          if (guess[i] == numberArray[i]) {
+            correctPoisitions++;
+            inputCopy[i] = null;
+          }
+        }
+        for (i = 0; i < numLegnth; i++) {
+          for (j = 0; j < numLegnth; j++) {
+            if (guess[i] == inputCopy[j] && i !== j) {
+              correctDigits++;
+              inputCopy[j] = null; // mark as matched
+              break;
+            }
+          }
+        }
+
+        // check for correct digits in the wrong position and keep count
+
+        if (correctPoisitions == numLegnth) {
+          won = true;
+          alert(
+            "You WIN, you guessed the number " + numberArray + " correctly!"
+          );
+          break;
+        } else {
+          alert(
+            "Your guess is :" +
+              guess +
+              "\n" +
+              "You guessed: \n" +
+              correctPoisitions +
+              " correct digit(s) in correct position(s), \n" +
+              correctDigits +
+              " correct digit(s) in wrong position(s)."
+          );
+        }
+      } // end of main for loop
+      if (inputError) {
+        alert("Invalid input " + guess + " was entered. Game cancelled.");
+      } else if (!won) {
+        // we have come out of the main loop, so we are out of guesses
+
+        alert("GAME OVER! - No guesses left. The number was " + numberArray);
+      }
+    </script>
+  </body>
+</html>

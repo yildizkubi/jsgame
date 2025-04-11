@@ -1,0 +1,13 @@
+START GAME
+1. Generate a random 3-digit secret code (each digit 0–9, can repeat).
+2. Initialize a guess counter.
+3. LOOP: Ask the player to guess the 3-digit code via prompt().
+    a. Validate the guess (3 digits, numeric).
+    b. Convert guess and code to arrays of digits.
+    c. Check for:
+        - Correct digits in the correct place.
+        - Correct digits in the wrong place.
+    d. Show feedback using alert().
+    e. If all 3 digits are correct and in the correct place → player wins, exit loop.
+    f. Else → increment guess counter.
+4. End the game with success or after max tries (e.g., 10 attempts).

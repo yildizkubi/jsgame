@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guess The Secret Code</title>
+    <link
+      rel="icon"
+      href="https://pngimg.com/d/question_mark_PNG134.png"
+      type="image/png"
+    />
+    <style>
+      body {
+        background-image: url("https://i.ytimg.com/vi/DvAJ_J2svv8/maxresdefault.jpg");
+        background-size: cover; /* Resmi sayfaya sığdırır */
+        background-position: center; /* Resmi ortalar */
+        background-repeat: no-repeat; /* Resmin tekrar etmesini engeller */
+        background-attachment: fixed; /* Sayfa kaydırıldığında sabit kalır */
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // Main game object
+      const codeBreaker = {
+        secretCode: [],
+        maxAttempts: 10,
+        attempts: 0,
+        gameActive: true,
+
+        // Initialize the game
+        init() {
+          this.generateSecretCode();
+          this.startGame();
+        },
+
+        // Generate a random 3-digit code with digits 0-9 (can repeat)
+        generateSecretCode() {
+          for (let i = 0; i < 3; i++) {
+            this.secretCode.push(Math.floor(Math.random() * 10));
+          }
+          console.log("Secret code (for testing):", this.secretCode.join(""));
+        },
+
+        // Start the game loop
+        startGame() {
+          alert(
+            "Welcome to the Code Guessing Game!\n\nTry to guess the 3-digit secret code.\nAfter each guess, you'll get feedback:\n- Correct digit in correct place\n- Correct digit in wrong place"
+          );
+          alert("Secret code (for testing): " + this.secretCode);
+
+          while (this.gameActive && this.attempts < this.maxAttempts) {
+            this.makeGuess();
+          }
+
+          if (this.attempts >= this.maxAttempts) {
+            alert(
+              `Game over! You ran out of attempts.\nThe secret code was: ${this.secretCode.join(
+                ""
+              )}`
+            );
+          }
+        },
+
+        // Handle a player's guess
+        makeGuess() {
+          const guessInput = prompt(
+            `Attempt ${this.attempts + 1}/${
+              this.maxAttempts
+            }\nEnter your 3-digit guess:`
+          );
+
+          // Validate input
+          if (guessInput === null) {
+            this.gameActive = false;
+            alert("Game cancelled. Refresh to play again.");
+            return;
+          }
+
+          if (!this.validateGuess(guessInput)) {
+            alert("Invalid input! Please enter exactly 3 digits (0-9).");
+            return;
+          }
+
+          // Process valid guess
+          this.attempts++;
+          const guessDigits = guessInput.split("").map(Number);
+          const feedback = this.checkGuess(guessDigits);
+
+          // Display feedback
+          alert(
+            `Your guess: ${guessInput}\n` +
+              `Correct digit in correct place: ${feedback.correctPosition}\n` +
+              `Correct digit in wrong place: ${feedback.wrongPosition}`
+          );
+
+          // Check for win
+          if (feedback.correctPosition === 3) {
+            alert(
+              `Congratulations! You cracked the code in ${this.attempts} attempts!`
+            );
+            this.gameActive = false;
+          }
+        },
+
+        // Validate the player's guess
+        validateGuess(guess) {
+          return /^\d{3}$/.test(guess);
+        },
+
+        // Check the guess against the secret code
+        checkGuess(guessDigits) {
+          let correctPosition = 0;
+          let wrongPosition = 0;
+
+          // Create copies to mark used digits
+          const secretCodeCopy = [...this.secretCode];
+          const guessCopy = [...guessDigits];
+
+          // First check for correct positions
+          for (let i = 0; i < 3; i++) {
+            if (guessCopy[i] === secretCodeCopy[i]) {
+              correctPosition++;
+              // Mark these as used
+              secretCodeCopy[i] = -1;
+              guessCopy[i] = -2;
+            }
+          }
+
+          // Then check for correct digits in wrong positions
+          for (let i = 0; i < 3; i++) {
+            if (guessCopy[i] !== -2) {
+              // Skip already matched digits
+              const foundIndex = secretCodeCopy.indexOf(guessCopy[i]);
+              if (foundIndex !== -1) {
+                wrongPosition++;
+                // Mark this digit as used
+                secretCodeCopy[foundIndex] = -1;
+              }
+            }
+          }
+
+          return { correctPosition, wrongPosition };
+        },
+      };
+
+      // Start the game
+      codeBreaker.init();
+    </script>
+  </body>
+</html>
