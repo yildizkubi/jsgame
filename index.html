@@ -65,7 +65,7 @@
         let inputCopy = numberArray.slice();
         for (i = 0; i < numLegnth; i++) {
           if (guess[i] == numberArray[i]) {
-            correctPoisitions++;
+            correctPositions++;
             inputCopy[i] = null;
           }
         }
@@ -81,7 +81,7 @@
 
         // check for correct digits in the wrong position and keep count
 
-        if (correctPoisitions == numLegnth) {
+        if (correctPositions == numLegnth) {
           won = true;
           alert(
             "You WIN, you guessed the number " + numberArray + " correctly!"
@@ -93,7 +93,7 @@
               guess +
               "\n" +
               "You guessed: \n" +
-              correctPoisitions +
+              correctPositions +
               " correct digit(s) in correct position(s), \n" +
               correctDigits +
               " correct digit(s) in wrong position(s)."
